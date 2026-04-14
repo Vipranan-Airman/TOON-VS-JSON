@@ -25,13 +25,13 @@ sections[12]{title,content}:
 ### 2. Benchmark Flow
 
 ```
-STEP 1: Load JSON and TOON content (from public folder or paste)
+STEP 1: Load JSON and TOON content (auto-loaded from public folder)
 
-STEP 2: Extract 20 question templates from JSON section titles
+STEP 2: Extract 10 question templates from JSON section titles
   e.g., What does the document say about Introduction?
 
-STEP 3: For each repeat (default 5):
-  For each question (20):
+STEP 3: Run in parallel (10 concurrent calls)
+  For each question:
     - Send JSON query to Claude via AWS Bedrock
     - Send TOON query to Claude via AWS Bedrock
     - Record tokens and latency for each
@@ -76,10 +76,10 @@ Open http://localhost:3000
 ## Usage
 
 1. The app auto-loads `operational-procedures.json` and `.toon` from the public folder
-2. Set repeat count (default 5)
+2. Set repeat count (default 1)
 3. Click **Run Benchmark**
 
-**Total API calls** = 20 questions × repeats × 2 formats. Default = 200 calls (~5-10 min depending on latency).
+**Total API calls** = 10 questions × 2 formats × repeats. Default = 20 calls (~2-5 seconds with parallel execution).
 
 ## API
 
@@ -115,7 +115,7 @@ Response:
 
 ```
 Winner: TOON (15% fewer tokens)
-JSON avg: 1,500 tokens | TOON avg: 1,275 tokens | Runs: 100/100
+JSON avg: 1,500 tokens | TOON avg: 1,275 tokens | Runs: 10/10
 ```
 
 ## Notes
@@ -123,3 +123,4 @@ JSON avg: 1,500 tokens | TOON avg: 1,275 tokens | Runs: 100/100
 - `temperature: 0`, `max_tokens: 256` for deterministic compact responses
 - Results are calculated in-memory (no database)
 - Uses AWS Bedrock to invoke Claude Sonnet 4.6
+- Runs 10 concurrent API calls in parallel for speed
